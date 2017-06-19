@@ -1,0 +1,51 @@
+.main-box{
+  max-width: 600px;
+  margin: 5% auto;
+}
+
+.left-side{
+  position: relative;
+  text-align: center;
+  font-size: 110%;
+  width: 35%;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.right-side{
+  position: relative;
+  height: 55%;
+  width: 55%;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.temperature-info{
+  font-size: 180%;
+}
+
+.temperature-button{
+  color: #d3d3d3;
+  font-size: 70%;
+}
+
+.second-half{
+  padding: 5% 0 0 0;
+}
+
+.second-title{
+  position: relative;
+  float: left;
+}
+
+.forecast-bar{
+  margin: auto;
+  clear: both;
+}
+
+.forecast-block{
+  text-align: center;
+  outline: 1px solid;
+  width: 30%;
+  padding: 2% 4% 2% 4%;
+}
