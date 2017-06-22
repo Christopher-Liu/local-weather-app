@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Local Weather App</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="main.css">
   </head>
 
@@ -11,19 +12,22 @@
 
   <div class="container">
     <div class="main-section">
-      <div class="left-side">
-        <span id="main-location"></span>
-        <span id="main-temp"></span>
-        <span id="main-weather-info"></span>
-        <span id="temperature-button">C</span>
+      <div class="main-section-component" id="left-side">
+        <div id="main-location"></div>
+        <div>
+          <span id="main-temp"></span>
+          <span id="temperature-button">| C</span>
+        </div>
+        <div id="main-weather-info"></div>
       </div>
 
-      <span id="main-weather-icon">Test</span>
+      <span class="main-section-component" id="main-weather-icon">Test</span>
     </div>
 
 
+    <p id="forecast-title">The Forecast</p>
     <div id="forecast-section">
-      <div class="forecast-box">
+      <div class="forecast-box" id="forecast-box-one">
         <div class="forecast-day"></div>
         <div class="forecast-icon"></div>
         <div class="forecast-temp">
@@ -33,7 +37,7 @@
         <div class="forecast-info"></div>
       </div>
 
-      <div class="forecast-box">
+      <div class="forecast-box" id="forecast-box-two">
         <div class="forecast-day"></div>
         <div class="forecast-icon"></div>
         <div class="forecast-temp">
@@ -43,7 +47,7 @@
         <div class="forecast-info"></div>
       </div>
 
-      <div class="forecast-box">
+      <div class="forecast-box" id="forecast-box-three">
         <div class="forecast-day"></div>
         <div class="forecast-icon"></div>
         <div class="forecast-temp">
@@ -53,7 +57,7 @@
         <div class="forecast-info"></div>
       </div>
 
-      <div class="forecast-box">
+      <div class="forecast-box" id="forecast-box-four">
         <div class="forecast-day"></div>
         <div class="forecast-icon"></div>
         <div class="forecast-temp">

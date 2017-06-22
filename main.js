@@ -11,6 +11,7 @@ $(document).ready(function() {
   var highForecastC = [];
   var lowForecastC = [];
 
+
   // API request-chain to get all of the weather data
   // Starts with an API get-request to get location data from the IP API
   $.ajax({
@@ -25,7 +26,6 @@ $(document).ready(function() {
       location = data.city;
 
       $("#main-location").append(location);
-
 
 
       // API call to get current weather conditions from Wunderground API
@@ -90,7 +90,7 @@ $(document).ready(function() {
         $(this).find(".forecast-temp-high").html(highForecastC[count]);
         $(this).find(".forecast-temp-low").html(lowForecastC[count]);
         $("#main-temp").html(temperatureC + " C");
-        $("#temperature-button").html(" F");
+        $("#temperature-button").html("| F");
         count ++;
       });
       token = "C";
@@ -99,11 +99,12 @@ $(document).ready(function() {
         $(this).find(".forecast-temp-high").html(highForecastF[count]);
         $(this).find(".forecast-temp-low").html(lowForecastF[count]);
         $("#main-temp").html(temperatureF + " F");
-        $("#temperature-button").html(" C");
+        $("#temperature-button").html("| C");
         count ++;
       });
       token = "F";
     }
   };
+
 
 });

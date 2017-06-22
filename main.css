@@ -1,6 +1,9 @@
 body{
   padding: 0 0;
   margin: 0 0;
+  background-color: #cecece;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: 700;
 }
 
 .container{
@@ -14,15 +17,28 @@ body{
 /* Main (top) section of the web app */
 .main-section{
   margin: 3% 0;
-  background-color: #cecece;
+  padding: 10% 0 15%; 0;
+  display: flex;
+  font-size: 1.5em;
 }
 
-.left-side{
-  font-size: 1.25em;
+.main-section-component{
+  flex: 1;
+  text-align: center;
+}
+
+
+#left-side{
+}
+
+#main-weather-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #main-location{
-
+  text-transform: uppercase;
 }
 
 #main-temp{
@@ -30,7 +46,7 @@ body{
 }
 
 #main-weather-info{
-
+  text-transform: uppercase;
 }
 
 #temperature-button{
@@ -41,21 +57,61 @@ body{
 
 
 /* Bottom section of the web app displaying the forecast */
-#forecast-section{
+#forecast-title{
+  margin: 0 0;
+  font-size: 1.3em;
 }
 
 .forecast-box{
   float: left;
-  width: 45%;
-  padding: 2% 1%;
-  background-color: #17C5FF;
+  width: 50%;
+  margin: 0 0;
+  padding: 2% 0;
+  text-align: center;
+  text-transform: uppercase;
 }
+
+.forecast-day{
+  padding: 3% 0;
+}
+
+.forecast-icon{
+  padding: 5% 0;
+}
+
+.forecast-info{
+  padding: 3% 0;
+}
+
+.forecast-temp{
+  padding: 3% 0;
+  font-size: 1.35em;
+}
+
+#forecast-box-one{
+  background-color: #36CDFF;
+}
+#forecast-box-two{
+  background-color: #5CD6FF;
+}
+#forecast-box-three{
+  background-color: #7ADEFF;
+}
+#forecast-box-four{
+  background-color: #A1E7FF;
+}
+
+
 
 
 
 
 @media(min-width: 768px){
+  .main-section{
+    font-size: 2em;
+  }
+
   .forecast-box{
-    width:22%;
+    width:25%;
   }
 }
