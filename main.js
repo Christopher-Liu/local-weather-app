@@ -6,10 +6,13 @@ $(document).ready(function() {
   var temperatureC;
   var token = "F";
 
-  var forecastF = [];
-  var forecastC = [];
+  var highForecastF = [];
+  var lowForecastF = [];
+  var highForecastC = [];
+  var lowForecastC = [];
 
-  // API call to get location data from the IP API
+  // API request-chain to get all of the weather data
+  // Starts with an API get-request to get location data from the IP API
   $.ajax({
     url: "https://freegeoip.net/json/",
     async: "false",
@@ -35,7 +38,7 @@ $(document).ready(function() {
           temperatureF = response.current_observation.temp_f;
           temperatureC = response.current_observation.temp_c;
 
-          $("#main-temp").append(temperatureF + "°F");
+          $("#main-temp").html(temperatureF + " F");
           $("#main-weather-info").append(response.current_observation.weather);
           $("#main-weather-icon").html("<img src=\"" + response.current_observation.icon_url + "\">");
         }
@@ -55,11 +58,14 @@ $(document).ready(function() {
           $("#forecast-section").children().each(function() {
             $(this).children(".forecast-day").append(forecastArray[counter].date.weekday_short);
             $(this).children(".forecast-icon").html("<img src=\"" + forecastArray[counter].icon_url + "\">");
-            $(this).children(".forecast-temp").append(forecastArray[counter].high.fahrenheit + "/" + forecastArray[counter].low.fahrenheit);
+            $(this).find(".forecast-temp-high").append(forecastArray[counter].high.fahrenheit);
+            $(this).find(".forecast-temp-low").append(forecastArray[counter].low.fahrenheit);
             $(this).children(".forecast-info").append(forecastArray[counter].conditions);
 
-            forecastF.push(forecastArray[counter].high.fahrenheit + "/" + forecastArray[counter].low.fahrenheit);
-            forecastC.push(forecastArray[counter].high.celsius + "/" + forecastArray[counter].low.celsius);
+            highForecastF.push(forecastArray[counter].high.fahrenheit);
+            lowForecastF.push(forecastArray[counter].low.fahrenheit);
+            highForecastC.push(forecastArray[counter].high.celsius);
+            lowForecastC.push(forecastArray[counter].low.celsius);
             counter ++;
           });
         }
@@ -69,16 +75,35 @@ $(document).ready(function() {
 
 
 
-  $("#temperature-button").on("click",function(){
+  $("#temperature-button").on("click", function(){
+    tempUnitChange();
+  });
+
+
+
+  // Function for switching temperature units from F to C and vice versa
+  function tempUnitChange(){
+    var count = 0;
+
     if (token == "F") {
-      $("#main-temp").html(temperatureC + "°C");
-      $("#temperature-button").html("°F");
+      $("#forecast-section").children().each(function() {
+        $(this).find(".forecast-temp-high").html(highForecastC[count]);
+        $(this).find(".forecast-temp-low").html(lowForecastC[count]);
+        $("#main-temp").html(temperatureC + " C");
+        $("#temperature-button").html(" F");
+        count ++;
+      });
       token = "C";
     } else {
-      $("#main-temp").html(temperatureF + "°F");
-      $("#temperature-button").html("°C");
+      $("#forecast-section").children().each(function() {
+        $(this).find(".forecast-temp-high").html(highForecastF[count]);
+        $(this).find(".forecast-temp-low").html(lowForecastF[count]);
+        $("#main-temp").html(temperatureF + " F");
+        $("#temperature-button").html(" C");
+        count ++;
+      });
       token = "F";
     }
-  });
+  };
 
 });
