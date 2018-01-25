@@ -1,110 +1,103 @@
-$(document).ready(function() {
-  var longi;
-  var lati;
-  var location;
-  var temperatureF;
-  var temperatureC;
-  var token = "F";
+/* Beginning my re-write of this webapp to utilize JavaScript's Fetch API
+and removing jQuery as a dependency altogether. */
 
-  var highForecastF = [];
-  var lowForecastF = [];
-  var highForecastC = [];
-  var lowForecastC = [];
+let userLongitude;
+let userLatitude;
+let userLocation;
+let temperatureF;
+let temperatureC;
+let token = "F";
 
+let forecastArray = [];
+let highForecastF = [];
+let lowForecastF = [];
+let highForecastC = [];
+let lowForecastC = [];
 
-  // API request-chain to get all of the weather data
-  // Starts with an API get-request to get location data from the IP API
-  $.ajax({
-    url: "https://freegeoip.net/json/",
-    async: "false",
-    dataType: "json",
-    success: function(data) {
-      console.log("IP AJAX request successful");
-
-      longi = data.longitude;
-      lati = data.latitude;
-      location = data.city;
-
-      $("#main-location").append(location);
+let temperatureButton = document.querySelector("#temperature-button");
+temperatureButton.addEventListener("click", () => tempUnitChange());
 
 
-      // API call to get current weather conditions from Wunderground API
-      $.ajax({
-        url: "https://api.wunderground.com/api/7965a61d5be76ab2/conditions/q/" + lati + "," + longi + ".json",
-        dataType: "json",
-        success: function(response) {
-          console.log("Weather conditions AJAX request successful");
-
-          temperatureF = response.current_observation.temp_f;
-          temperatureC = response.current_observation.temp_c;
-
-          $("#main-temp").html(temperatureF + " F");
-          $("#main-weather-info").append(response.current_observation.weather);
-          $("#main-weather-icon").html("<img src=\"" + response.current_observation.icon_url + "\">");
-        }
-      });
+function populateMainSection(dataArray) {
+	document.querySelector("#main-temp").innerHTML = dataArray.current_observation.temp_f + " F";
+	document.querySelector("#main-weather-info").textContent = dataArray.current_observation.weather;
+	document.querySelector("#main-weather-icon").innerHTML = "<img src=\"" + dataArray.current_observation.icon_url + "\">";
+}
 
 
-      // API call to get forecast data from the Wunderground API
-      $.ajax({
-        url: "https://api.wunderground.com/api/7965a61d5be76ab2/forecast/q/" + lati + "," + longi + ".json",
-        dataType: "json",
-        success: function(res) {
-          console.log("Weather forecast AJAX request successful");
+function populateForecastBar(dataArray) {
+	let index = 0;
+	let childrenArray = Array.from(document.querySelector('#forecast-section').children);
 
-          var forecastArray = res.forecast.simpleforecast.forecastday;
-          var counter = 0;
+	childrenArray.forEach( child => {
+		child.children[0].textContent = dataArray[index].date.weekday_short;   					  // .forecast-day
+		child.children[1].innerHTML = "<img src=\"" + dataArray[index].icon_url + "\">";  // .forecast-icon
+		child.children[2].children[0].textContent = dataArray[index].high.fahrenheit;     // .forecast-temp-high
+		child.children[2].children[1].textContent = dataArray[index].low.fahrenheit;      // .forecast-temp-low
+		child.children[3].textContent = dataArray[index].conditions;   							 		  // .forecast-info
 
-          $("#forecast-section").children().each(function() {
-            $(this).children(".forecast-day").append(forecastArray[counter].date.weekday_short);
-            $(this).children(".forecast-icon").html("<img src=\"" + forecastArray[counter].icon_url + "\">");
-            $(this).find(".forecast-temp-high").append(forecastArray[counter].high.fahrenheit);
-            $(this).find(".forecast-temp-low").append(forecastArray[counter].low.fahrenheit);
-            $(this).children(".forecast-info").append(forecastArray[counter].conditions);
-
-            highForecastF.push(forecastArray[counter].high.fahrenheit);
-            lowForecastF.push(forecastArray[counter].low.fahrenheit);
-            highForecastC.push(forecastArray[counter].high.celsius);
-            lowForecastC.push(forecastArray[counter].low.celsius);
-            counter ++;
-          });
-        }
-      });
-    }
-  });
+		highForecastF.push(dataArray[index].high.fahrenheit);
+		lowForecastF.push(dataArray[index].low.fahrenheit);
+		highForecastC.push(dataArray[index].high.celsius);
+		lowForecastC.push(dataArray[index].low.celsius);
+		index ++;
+	});
+}
 
 
+function tempUnitChange() {
+	let count = 0;
+	let forecastSection = Array.from(document.querySelector("#forecast-section").children);
 
-  $("#temperature-button").on("click", function(){
-    tempUnitChange();
-  });
+	if (token === "F") {
+		forecastSection.forEach(child => {
+			child.children[2].children[0].textContent = highForecastC[count];
+			child.children[2].children[1].textContent = lowForecastC[count];
+
+			count ++;
+		});
+
+		document.querySelector("#main-temp").textContent = temperatureC + " C";
+		document.querySelector("#temperature-button").textContent = "| F";
+		token = "C"
+	} else {
+		forecastSection.forEach(child => {
+			child.children[2].children[0].textContent = highForecastF[count];
+			child.children[2].children[1].textContent = lowForecastF[count];
+
+			count ++;
+		});
+
+		document.querySelector("#main-temp").textContent = temperatureF + " F";
+		document.querySelector("#temperature-button").textContent = "| C";
+		token = "F"
+	}
+}
 
 
 
-  // Function for switching temperature units from F to C and vice versa
-  function tempUnitChange(){
-    var count = 0;
+fetch('https://freegeoip.net/json/')
+	.then( response => response.json())
+	.then( response => {
+		userLongitude = response.longitude;
+		userLatitude = response.latitude;
+		userLocation = response.location;
 
-    if (token == "F") {
-      $("#forecast-section").children().each(function() {
-        $(this).find(".forecast-temp-high").html(highForecastC[count]);
-        $(this).find(".forecast-temp-low").html(lowForecastC[count]);
-        $("#main-temp").html(temperatureC + " C");
-        $("#temperature-button").html("| F");
-        count ++;
-      });
-      token = "C";
-    } else {
-      $("#forecast-section").children().each(function() {
-        $(this).find(".forecast-temp-high").html(highForecastF[count]);
-        $(this).find(".forecast-temp-low").html(lowForecastF[count]);
-        $("#main-temp").html(temperatureF + " F");
-        $("#temperature-button").html("| C");
-        count ++;
-      });
-      token = "F";
-    }
-  };
+		document.querySelector('#main-location').textContent = userLocation;
 
+		return fetch('https://api.wunderground.com/api/7965a61d5be76ab2/conditions/q/' + userLatitude + ',' + userLongitude + '.json');
+	})
+	.then( response => response.json())
+	.then( response => {
+		temperatureF = response.current_observation.temp_f;
+		temperatureC = response.current_observation.temp_c;
 
-});
+		populateMainSection(response);
+
+		return fetch("https://api.wunderground.com/api/7965a61d5be76ab2/forecast/q/" + userLatitude + "," + userLongitude + ".json");
+	})
+	.then(response => response.json())
+	.then(response => {
+		forecastArray = response.forecast.simpleforecast.forecastday;
+		populateForecastBar(forecastArray);
+	})
