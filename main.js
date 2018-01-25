@@ -17,6 +17,13 @@ let lowForecastC = [];
 let temperatureButton = document.querySelector("#temperature-button");
 temperatureButton.addEventListener("click", () => tempUnitChange());
 
+let searchBar = document.querySelector("#searchBar");
+searchBar.addEventListener("keydown", (e) => {
+	if (e.keyCode === 13) {
+		searchBarSubmit(document.querySelector("#searchBar").value);
+	}
+});
+
 
 function populateMainSection(dataArray) {
 	document.querySelector("#main-temp").innerHTML = dataArray.current_observation.temp_f + " F";
@@ -74,6 +81,30 @@ function tempUnitChange() {
 	}
 }
 
+function searchBarSubmit(value) {
+	let cityState = value.split(',');
+	let city = cityState[0].replace(' ','_');
+	let state = cityState[1]
+
+	fetch('https://api.wunderground.com/api/7965a61d5be76ab2/conditions/q/' + state + '/' + city + '.json')
+		.then(response => response.json())
+		.then(response => {
+
+		temperatureF = response.current_observation.temp_f;
+		temperatureC = response.current_observation.temp_c;
+		userLocation = response.current_observation.display_location.city;
+		document.querySelector('#main-location').textContent = userLocation;
+
+		populateMainSection(response)
+
+		return fetch('https://api.wunderground.com/api/7965a61d5be76ab2/forecast/q/' + state + '/' + city + '.json')
+		})
+		.then(response => response.json())
+		.then(response => {
+			forecastArray = response.forecast.simpleforecast.forecastday;
+			populateForecastBar(forecastArray)
+		});
+}
 
 
 fetch('https://freegeoip.net/json/')
@@ -99,4 +130,4 @@ fetch('https://freegeoip.net/json/')
 	.then(response => {
 		forecastArray = response.forecast.simpleforecast.forecastday;
 		populateForecastBar(forecastArray);
-	})
+	});
