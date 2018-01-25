@@ -3,7 +3,6 @@ and removing jQuery as a dependency altogether. */
 
 let userLongitude;
 let userLatitude;
-let userLocation;
 let temperatureF;
 let temperatureC;
 let token = "F";
@@ -26,6 +25,7 @@ searchBar.addEventListener("keydown", (e) => {
 
 
 function populateMainSection(dataArray) {
+	document.querySelector('#main-location').textContent = dataArray.current_observation.display_location.city;
 	document.querySelector("#main-temp").innerHTML = dataArray.current_observation.temp_f + " F";
 	document.querySelector("#main-weather-info").textContent = dataArray.current_observation.weather;
 	document.querySelector("#main-weather-icon").innerHTML = "<img src=\"" + dataArray.current_observation.icon_url + "\">";
@@ -89,15 +89,12 @@ function searchBarSubmit(value) {
 	fetch('https://api.wunderground.com/api/7965a61d5be76ab2/conditions/q/' + state + '/' + city + '.json')
 		.then(response => response.json())
 		.then(response => {
+			temperatureF = response.current_observation.temp_f;
+			temperatureC = response.current_observation.temp_c;
 
-		temperatureF = response.current_observation.temp_f;
-		temperatureC = response.current_observation.temp_c;
-		userLocation = response.current_observation.display_location.city;
-		document.querySelector('#main-location').textContent = userLocation;
+			populateMainSection(response)
 
-		populateMainSection(response)
-
-		return fetch('https://api.wunderground.com/api/7965a61d5be76ab2/forecast/q/' + state + '/' + city + '.json')
+			return fetch('https://api.wunderground.com/api/7965a61d5be76ab2/forecast/q/' + state + '/' + city + '.json')
 		})
 		.then(response => response.json())
 		.then(response => {
@@ -107,7 +104,7 @@ function searchBarSubmit(value) {
 }
 
 
-fetch('https://freegeoip.net/json/')
+fetch('https://ipapi.co/json')
 	.then( response => response.json())
 	.then( response => {
 		userLongitude = response.longitude;
@@ -119,8 +116,6 @@ fetch('https://freegeoip.net/json/')
 	.then( response => {
 		temperatureF = response.current_observation.temp_f;
 		temperatureC = response.current_observation.temp_c;
-		userLocation = response.current_observation.display_location.city;
-		document.querySelector('#main-location').textContent = userLocation;
 
 		populateMainSection(response);
 
