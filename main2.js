@@ -12,3 +12,11 @@ let highForecastF = [];
 let lowForecastF = [];
 let highForecastC = [];
 let lowForecastC = [];
+
+
+// Fetch API test code. This can replace the jQuery AJAX call
+fetch('https://freegeoip.net/json/').then(res => {
+	return res.json();
+}).then( myJson => {
+	console.log(myJson)
+});
