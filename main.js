@@ -81,9 +81,6 @@ fetch('https://freegeoip.net/json/')
 	.then( response => {
 		userLongitude = response.longitude;
 		userLatitude = response.latitude;
-		userLocation = response.location;
-
-		document.querySelector('#main-location').textContent = userLocation;
 
 		return fetch('https://api.wunderground.com/api/7965a61d5be76ab2/conditions/q/' + userLatitude + ',' + userLongitude + '.json');
 	})
@@ -91,6 +88,8 @@ fetch('https://freegeoip.net/json/')
 	.then( response => {
 		temperatureF = response.current_observation.temp_f;
 		temperatureC = response.current_observation.temp_c;
+		userLocation = response.current_observation.display_location.city;
+		document.querySelector('#main-location').textContent = userLocation;
 
 		populateMainSection(response);
 
