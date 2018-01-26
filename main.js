@@ -81,6 +81,7 @@ function tempUnitChange() {
 	}
 }
 
+
 function searchBarSubmit(value) {
 	let cityState = value.split(',');
 	let city = cityState[0].replace(' ','_');
